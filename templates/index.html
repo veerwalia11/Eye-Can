@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Check Your Vision</h2>
+    <form id="visionForm">
+        <label for="matched_optotypes">Enter matched optotypes (comma separated):</label><br>
+        <input type="text" id="matched_optotypes" name="matched_optotypes"><br><br>
+
+        <label for="screen_distance_inches">Distance from screen (in inches):</label><br>
+        <input type="number" id="screen_distance_inches" name="screen_distance_inches" value="16"><br><br>
+
+        <button type="submit">Check Vision</button>
+    </form>
+
+    <h3 id="results"></h3>
+
+    <script>
+        document.getElementById("visionForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const matched_optotypes = document.getElementById("matched_optotypes").value.split(",");
+            const screen_distance_inches = document.getElementById("screen_distance_inches").value;
+
+            const response = await fetch("/evaluate_vision", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({matched_optotypes, screen_distance_inches})
+            });
+            const data = await response.json();
+            document.getElementById("results").innerText = JSON.stringify(data, null, 2);
+        });
+    </script>
+</body>
+</html>
